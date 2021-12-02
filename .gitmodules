@@ -1,3 +1,6 @@
 [submodule "libs/qt4qssh"]
 	path = libs/qt4qssh
 	url = git@github.com:lvklabs/QSsh.git
+[submodule "libs/botan"]
+	path = libs/botan
+	url = git@github.com:randombit/botan.git
