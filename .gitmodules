@@ -1,0 +1,3 @@
+[submodule "libs/qt4qssh"]
+	path = libs/qt4qssh
+	url = git@github.com:lvklabs/QSsh.git
