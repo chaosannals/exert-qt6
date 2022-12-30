@@ -19,6 +19,7 @@ public:
 
 private slots:
     void onClickOpenButton(bool);
+    void onReadData();
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
