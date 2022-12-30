@@ -25,6 +25,20 @@ static QMap<QString, QSerialPort::Parity> parity {
     { "SpaceParity", QSerialPort::Parity::SpaceParity },
 };
 
+// 流控制
+static QMap<QString, QSerialPort::FlowControl> flowControl {
+    { "NoFlowControl", QSerialPort::FlowControl::NoFlowControl },
+    { "HardwareControl", QSerialPort::FlowControl::HardwareControl },
+    { "SoftwareControl", QSerialPort::FlowControl::SoftwareControl },
+};
+
+// 打开模式
+static QMap<QString, QIODevice::OpenModeFlag> openMode {
+    {"只读", QIODevice::ReadOnly },
+    {"只写", QIODevice::WriteOnly },
+    {"读写", QIODevice::OpenModeFlag::ReadWrite },
+};
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -42,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->serialPortComboBox->addItem(info.portName());
     }
     ui->rateComboBox->addItem("9600");
+    ui->rateComboBox->addItem("115200");
     for (const auto &key : dataBits.keys()) {
         ui->dataBitsComboBox->addItem(key);
     }
@@ -50,6 +65,12 @@ MainWindow::MainWindow(QWidget *parent)
     }
     for (const auto &key : parity.keys()) {
         ui->parityComboBox->addItem(key);
+    }
+    for (const auto &key : flowControl.keys()) {
+        ui->flowControlComboBox->addItem(key);
+    }
+    for (const auto &key : openMode.keys()) {
+        ui->modeComboBox->addItem(key);
     }
 }
 
@@ -68,8 +89,9 @@ void MainWindow::onClickOpenButton(bool)
         serialPort->setDataBits(dataBits[ui->dataBitsComboBox->currentText()]);
         serialPort->setStopBits(stopBits[ui->stopBitsComboBox->currentText()]);
         serialPort->setParity(parity[ui->parityComboBox->currentText()]);
+        serialPort->setFlowControl(flowControl[ui->flowControlComboBox->currentText()]);
 
-        if (true == serialPort->open(QIODevice::ReadWrite)) {
+        if (true == serialPort->open(openMode[ui->modeComboBox->currentText()])) {
             ui->outputTextEdit->append("提示：打开成功！");
         } else {
             ui->outputTextEdit->append("提示：打开失败！");
