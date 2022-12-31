@@ -20,8 +20,17 @@ public:
 private slots:
     void onClickOpenButton(bool);
     void onReadData();
+    void onSendData();
 private:
     Ui::MainWindow *ui;
     QSerialPort *serialPort;
+
+    void output(const QString &text);
+    template<typename ...A>
+    void output(const QString &format, A ...args)
+    {
+        QString result = format.arg(args...);
+        output(result);
+    }
 };
 #endif // MAINWINDOW_H

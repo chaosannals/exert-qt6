@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDateTime>
 
 // 数据位
 static QMap<QString, QSerialPort::DataBits> dataBits {
@@ -48,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->openButton, &QPushButton::clicked, this , &MainWindow::onClickOpenButton);
     connect(serialPort, &QSerialPort::readyRead, this, &MainWindow::onReadData);
+    connect(ui->sendButton, &QPushButton::clicked, this, &MainWindow::onSendData);
     connect(ui->clearButton, &QPushButton::clicked, this, [&] {
         ui->outputTextEdit->clear();
     });
@@ -92,14 +94,16 @@ void MainWindow::onClickOpenButton(bool)
         serialPort->setFlowControl(flowControl[ui->flowControlComboBox->currentText()]);
 
         if (true == serialPort->open(openMode[ui->modeComboBox->currentText()])) {
-            ui->outputTextEdit->append("提示：打开成功！");
+            output("提示：打开成功！");
         } else {
-            ui->outputTextEdit->append("提示：打开失败！");
+            output("提示：打开失败！");
         }
+        ui->sendButton->setEnabled(true);
     } else {
         ui->openButton->setText("打开");
+        ui->sendButton->setEnabled(false);
         serialPort->close();
-        ui->outputTextEdit->append("提示：已经关闭！");
+        output("提示：已经关闭！");
     }
 }
 
@@ -107,8 +111,22 @@ void MainWindow::onReadData()
 {
     auto buffer = serialPort->readAll();
     if (!buffer.isEmpty()) {
-        ui->outputTextEdit->append("数据：");
-        ui->outputTextEdit->append(buffer);
+        output("数据：");
+        output(buffer);
     }
     buffer.clear();
+}
+
+void MainWindow::onSendData()
+{
+    serialPort->write(ui->sendEdit->text().toUtf8());
+    output("已发送");
+}
+
+void MainWindow::output(const QString &text)
+{
+    auto now = QDateTime::currentDateTime();
+    QString format("[%1] %2");
+    QString result = format.arg(now.toString("yyyy-MM-dd hh:mm:ss"), text);
+    ui->outputTextEdit->append(result);
 }
