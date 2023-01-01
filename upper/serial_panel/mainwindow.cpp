@@ -95,10 +95,11 @@ void MainWindow::onClickOpenButton(bool)
 
         if (true == serialPort->open(openMode[ui->modeComboBox->currentText()])) {
             output("提示：打开成功！");
+            ui->sendButton->setEnabled(true);
         } else {
+            ui->openButton->setText("打开");
             output("提示：打开失败！");
         }
-        ui->sendButton->setEnabled(true);
     } else {
         ui->openButton->setText("打开");
         ui->sendButton->setEnabled(false);
