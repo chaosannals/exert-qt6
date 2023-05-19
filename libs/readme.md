@@ -2,6 +2,8 @@
 
 ## botan Windows 下编译个 Qt
 
+botan 现在已经出 3.x 版， qssh 使用了 2.x 版本。
+
 ```bash
 # 执行配置生成 Qt mingw64 可用的 makefile
 python configure.py --cpu=x86_64 --cc-bin=x86_64-w64-mingw32-g++ --ar-command=x86_64-w64-mingw32-ar
